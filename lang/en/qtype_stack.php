@@ -638,6 +638,7 @@ $string['stackOptions_AnsTest_values_Int']                 = "Int";
 $string['stackOptions_AnsTest_values_String']              = "String";
 $string['stackOptions_AnsTest_values_StringSloppy']        = "StringSloppy";
 $string['stackOptions_AnsTest_values_RegExp']              = "RegExp";
+$string['stackOptions_AnsTest_values_Gap']                 = "Gap";
 
 $string['AT_NOTIMPLEMENTED']        = 'This answer test has not been implemented. ';
 $string['TEST_FAILED']              = 'The answer test failed to execute correctly: please alert your teacher. {$a->errors}';
@@ -761,6 +762,9 @@ $string['ATSysEquiv_SA_system_underdetermined'] = 'The equations in your system 
 $string['ATSysEquiv_SA_system_overdetermined']  = 'The entries underlined in red below are those that are incorrect. {$a->m0} ';
 
 $string['ATRegEx_missing_option']               = 'Missing regular expression in CAS Option field.';
+
+// Please add GAP language strings below this place holder.
+$string['ATGap_missing_option']                 = 'Missing Option field.';
 
 $string['studentValidation_yourLastAnswer']     = 'Your last answer was interpreted as follows: {$a}';
 $string['studentValidation_listofvariables']    = 'The variables found in your answer were: {$a}';

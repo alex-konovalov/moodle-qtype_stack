@@ -60,7 +60,8 @@ class stack_ans_test_controller {
               'String'               => 'stackOptions_AnsTest_values_String',
               'StringSloppy'         => 'stackOptions_AnsTest_values_StringSloppy',
               'RegExp'               => 'stackOptions_AnsTest_values_RegExp',
-              );
+              'Gap'                  => 'stackOptions_AnsTest_values_Gap',
+    );
 
     /**
      * The answertest object that the functions call.
@@ -220,6 +221,11 @@ class stack_ans_test_controller {
 
             case 'SysEquiv':
                 $this->at = new stack_answertest_general_cas($sans, $tans, 'ATSysEquiv', false, $casoption, $options);
+                break;
+
+            case 'Gap':
+                require_once(__DIR__ . '/gap.class.php');
+                $this->at = new stack_anstest_gap($sans, $tans, 'Gap', false, $casoption, $options);
                 break;
 
             default:
