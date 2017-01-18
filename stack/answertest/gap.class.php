@@ -29,7 +29,7 @@ class stack_anstest_gap extends stack_anstest {
         $ta = $this->tanskey;
 
         $result = $this->ValidateBySCSCP ( $this->sanskey, $this->tanskey, 
-                             'GeneratingSameGroup', 'localhost', 26133 ){
+                             'GeneratingSameGroup', 'localhost', 26133 );
 
         if ($result) {
             $this->atmark = 1;
@@ -60,7 +60,7 @@ class stack_anstest_gap extends stack_anstest {
 #
 # PingSCSCPservice( server, port )
 #
-function PingSCSCPservice ( $server, $port ){
+private function PingSCSCPservice ( $server, $port ){
 $socket=fsockopen( $server, $port );
 if ($socket == false ) {
     echo 'Can not establish connection to '.$server.':'.$port."\n";
@@ -76,7 +76,7 @@ if ($socket == false ) {
 #
 # ParseSCSCPresult( data );
 # 
-function ParseSCSCPresult( $string ){
+private function ParseSCSCPresult( $string ){
 $xml = simplexml_load_string($string, 'SimpleXMLElement'); 
 print_r($xml->OMATTR->OMA); 
 $result = (string) $xml->OMATTR->OMA->OMA->OMS[1]['name']; 
@@ -89,7 +89,7 @@ return [ $result, $hint ];
 #
 # ComposeSCSCPcall( command, arg, cd=scscp_transient_1 );
 # 
-function ComposeSCSCPcall ( $command, $arg, $cd='scscp_transient_1' ){
+private function ComposeSCSCPcall ( $command, $arg, $cd='scscp_transient_1' ){
 
 $call_id = substr(MD5(microtime()), 0, 10);
 
@@ -104,7 +104,7 @@ return $str;
 #
 # EvaluateBySCSCP( command, arg, server, port, cd=scscp_transient_1 );
 # 
-function EvaluateBySCSCP ( $command, $arg, $server, $port, $cd='scscp_transient_1' ){
+private function EvaluateBySCSCP ( $command, $arg, $server, $port, $cd='scscp_transient_1' ){
 
 # open socket connection
 
@@ -128,7 +128,7 @@ if($data !== "")
 
 # assemble and send SCSCP procedure call
   
-$str = ComposeSCSCPcall( $command, $arg, $cd );
+$str = $this->ComposeSCSCPcall( $command, $arg, $cd );
 
 echo "### Sending procedure call \n\n";
 
@@ -156,7 +156,7 @@ fclose($socket);
 
 echo "-------------------------\n";
 
-$res = ParseSCSCPresult($data); 
+$res = $this->ParseSCSCPresult($data); 
 
 echo "!!!!!!!!!!!!!!!!!!!!!!!!!\n";
 print_r($res);
@@ -169,7 +169,7 @@ echo "\n#########################\n";
 # ValidateBySCSCP( server, port )
 #
 private function ValidateBySCSCP ( $student_answer, $model_answer, $mode, $server, $port ){
-return EvaluateBySCSCP( 'ValidateAnswer', '<OMSTR>'.$student_answer.'</OMSTR><OMSTR>'.$model_answer.'</OMSTR><OMSTR>'.$mode.'</OMSTR>', $server, $port );
+return $this->EvaluateBySCSCP( 'ValidateAnswer', '<OMSTR>'.$student_answer.'</OMSTR><OMSTR>'.$model_answer.'</OMSTR><OMSTR>'.$mode.'</OMSTR>', $server, $port );
 } 
 
 }
