@@ -32,6 +32,10 @@ class stack_anstest_gap extends stack_anstest {
 
         if ($result) {
             $this->atmark = 1;
+            $this->aterror      = '';
+            $this->atfeedback   = stack_string('TEST_FAILED', array('errors' => $session->get_errors_key('STACKSA')));
+            $this->atansnote    = $result['note'];
+            $this->atvalid      = true;
             return true;
         } else {
             $this->atmark = 0;
