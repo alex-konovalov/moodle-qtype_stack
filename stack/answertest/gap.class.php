@@ -59,83 +59,72 @@ class stack_anstest_gap extends stack_anstest {
         return 'ATGap';
     }
 
-###########################################################################
-#
-# PingSCSCPservice( server, port )
-#
-private function PingSCSCPservice ( $server, $port ){
-$socket=fsockopen( $server, $port );
-if ($socket == false ) {
-    echo 'Can not establish connection to '.$server.':'.$port."\n";
-    return false;
-} else {
-    fclose($socket);
-    echo 'Can establish connection to '.$server.':'.$port."\n";
-    return true;
-}
-}
+    private function PingSCSCPservice ( $server, $port ){
+         $socket=fsockopen( $server, $port );
+        if ($socket == false ) {
+            throw new exception('Cannot establish connection to '.$server.':'.$port."\n");
+        } else {
+            fclose($socket);
+            //echo 'Can establish connection to '.$server.':'.$port."\n";
+        }
 
-###########################################################################
-#
-# ParseSCSCPresult( data );
-# 
-private function ParseSCSCPresult( $string ){
-$xml = simplexml_load_string($string, 'SimpleXMLElement'); 
-// print_r($xml->OMATTR->OMA); 
-$result = (string) $xml->OMATTR->OMA->OMA->OMS[1]['name']; 
-$hint = (string) $xml->OMATTR->OMA->OMA->OMSTR; 
-return [ $result, $hint ];
-}
+        return true;
+    }
 
+    private function ParseSCSCPresult($string) {
+        $xml = simplexml_load_string($string, 'SimpleXMLElement'); 
 
-###########################################################################
-#
-# ComposeSCSCPcall( command, arg, cd=scscp_transient_1 );
-# 
-private function ComposeSCSCPcall ( $command, $arg, $cd='scscp_transient_1' ){
+        //print_r($xml->OMATTR->OMA);
 
-$call_id = substr(MD5(microtime()), 0, 10);
+        $result = (string) $xml->OMATTR->OMA->OMA->OMS[1]['name'];
+        $hint = (string) $xml->OMATTR->OMA->OMA->OMSTR;
 
-$str = "<?scscp start ?>\n<OMOBJ><OMATTR><OMATP><OMS cd=\"scscp1\" name=\"call_id\"/><OMSTR>".$call_id."</OMSTR><OMS cd=\"scscp1\" name=\"option_return_object\"/><OMSTR></OMSTR></OMATP><OMA><OMS cd=\"scscp1\" name=\"procedure_call\"/><OMA><OMS cd=\"".$cd."\" name=\"".$command."\"/>".$arg."</OMA></OMA></OMATTR></OMOBJ>\n<?scscp end ?>\n";
+        return [ $result, $hint ];
+    }
 
-return $str;
+    private function ComposeSCSCPcall($command, $arg, $cd='scscp_transient_1') {
 
-}
+    $call_id = substr(MD5(microtime()), 0, 10);
 
-    
-###########################################################################
-#
-# EvaluateBySCSCP( command, arg, server, port, cd=scscp_transient_1 );
-# 
-private function EvaluateBySCSCP ( $command, $arg, $server, $port, $cd='scscp_transient_1' ){
+    $str = "<?scscp start ?>\n<OMOBJ><OMATTR><OMATP><OMS cd=\"scscp1\" name=\"call_id\"/><OMSTR>".$call_id."</OMSTR><OMS cd=\"scscp1\" name=\"option_return_object\"/><OMSTR></OMSTR></OMATP><OMA><OMS cd=\"scscp1\" name=\"procedure_call\"/><OMA><OMS cd=\"".$cd."\" name=\"".$command."\"/>".$arg."</OMA></OMA></OMATTR></OMOBJ>\n<?scscp end ?>\n";
 
-# open socket connection
+    return $str;
 
-$socket=fsockopen( $server, $port);
+    }
 
-# read SCSCP connection initiation message
+    private function EvaluateBySCSCP($command, $arg, $server, $port, $cd='scscp_transient_1' ){
 
-$data = fread($socket, 4096);
-if($data !== "") 
+    # open socket connection
 
-# respond with the protocol version 
+    $socket=fsockopen($server, $port);
 
-fwrite($socket, "<?scscp version=\"1.3\" ?>\n");  
+    # read SCSCP connection initiation message
 
-# get back agreed protocol version
+    $data = fread($socket, 4096);
+    if($data !== "") 
+        echo '### Received connection initiation message '.$data."\n";
 
-$data = fread($socket, 4096);
-// if($data !== "") 
+    # respond with the protocol version 
 
-# assemble and send SCSCP procedure call
-  
-$str = $this->ComposeSCSCPcall( $command, $arg, $cd );
+    fwrite($socket, "<?scscp version=\"1.3\" ?>\n");  
 
-echo $str;
-	
-fwrite($socket, $str);
+    # get back agreed protocol version
 
-# get the reply 
+    $data = fread($socket, 4096);
+    if($data !== "") {
+         echo '### Agreed protocol version '.$data."\n";
+    }
+
+    # assemble and send SCSCP procedure call
+
+    $str = $this->ComposeSCSCPcall( $command, $arg, $cd );
+
+    //echo "### Sending procedure call \n\n";
+    //echo $str;
+
+    fwrite($socket, $str);
+
+    # get the reply 
 
 $data = '';
 
