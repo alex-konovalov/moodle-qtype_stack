@@ -30,12 +30,15 @@ class stack_anstest_gap extends stack_anstest {
 
         $result = $this->ValidateBySCSCP ( $this->sanskey, $this->tanskey, 
                              'GeneratingSameGroup', 'localhost', 26133 );
+        // var_dump($result);
 
-        if ($result) {
+        $this->atfeedback = $result[1];
+
+        if ($result[0]=='true') {
             $this->atmark = 1;
             $this->aterror      = '';
-            $this->atfeedback   = stack_string('TEST_FAILED', array('errors' => $session->get_errors_key('STACKSA')));
-            $this->atansnote    = $result['note'];
+            // $this->atfeedback   = stack_string('TEST_FAILED', array('errors' => $session->get_errors_key('STACKSA')));
+            // $this->atansnote    = $result['note'];
             $this->atvalid      = true;
             return true;
         } else {
@@ -78,7 +81,7 @@ if ($socket == false ) {
 # 
 private function ParseSCSCPresult( $string ){
 $xml = simplexml_load_string($string, 'SimpleXMLElement'); 
-print_r($xml->OMATTR->OMA); 
+// print_r($xml->OMATTR->OMA); 
 $result = (string) $xml->OMATTR->OMA->OMA->OMS[1]['name']; 
 $hint = (string) $xml->OMATTR->OMA->OMA->OMSTR; 
 return [ $result, $hint ];
@@ -114,7 +117,6 @@ $socket=fsockopen( $server, $port);
 
 $data = fread($socket, 4096);
 if($data !== "") 
-  echo '### Received connection initiation message '.$data."\n";
 
 # respond with the protocol version 
 
@@ -123,22 +125,17 @@ fwrite($socket, "<?scscp version=\"1.3\" ?>\n");
 # get back agreed protocol version
 
 $data = fread($socket, 4096);
-if($data !== "") 
-  echo '### Agreed protocol version '.$data."\n";
+// if($data !== "") 
 
 # assemble and send SCSCP procedure call
   
 $str = $this->ComposeSCSCPcall( $command, $arg, $cd );
-
-echo "### Sending procedure call \n\n";
 
 echo $str;
 	
 fwrite($socket, $str);
 
 # get the reply 
-
-echo "\n### Receiving result \n\n";
 
 $data = '';
 
@@ -154,13 +151,10 @@ do {
     
 fclose($socket);
 
-echo "-------------------------\n";
-
 $res = $this->ParseSCSCPresult($data); 
 
-echo "!!!!!!!!!!!!!!!!!!!!!!!!!\n";
-print_r($res);
-echo "\n#########################\n";
+return $res;
+// print_r($res);
 
 }
 

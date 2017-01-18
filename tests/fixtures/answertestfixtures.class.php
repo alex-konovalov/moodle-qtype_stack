@@ -1273,8 +1273,10 @@ class stack_answertest_test_data {
         array('LowestTerms', '', '(2/4)*(x^2/t)', '0', 0, 'ATLowestTerms_entries.', ''),
         array('LowestTerms', '', 'x^(2/4)', '0', 0, 'ATLowestTerms_entries.', ''),
 
-        array('Gap', '', '(1)', '(1)', 1, '', ''),
-        array('Gap', '', '(1)', '(1,2)', 0, '', ''),
+        array('Gap', '', '()', '()', 1, '', ''),
+        array('Gap', '', '()', '(1,2)', 0, '', ''),
+        array('Gap', '', '(1,3)', '(1,2)', 0, '', ''),
+        array('Gap', '', '(1,2)', '(1,2)', 1, '', ''),
     );
 
     public static function get_raw_test_data() {
