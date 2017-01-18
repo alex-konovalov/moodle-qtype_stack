@@ -225,7 +225,7 @@ class stack_ans_test_controller {
 
             case 'Gap':
                 require_once(__DIR__ . '/gap.class.php');
-                $this->at = new stack_anstest_gap($sans, $tans, 'Gap', false, $casoption, $options);
+                $this->at = new stack_anstest_gap($sans, $tans, $options, $casoption);
                 break;
 
             default:
