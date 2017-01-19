@@ -1277,6 +1277,7 @@ class stack_answertest_test_data {
         array('Gap', '', '()', '(1,2)', 0, '', ''),
         array('Gap', '', '(1,3)', '(1,2)', 0, '', ''),
         array('Gap', '', '(1,2)', '(1,2)', 1, '', ''),
+        array('Gap', '', '(1,2),(1,3)', '(1,2),(1,2,3)', 1, '', ''),
     );
 
     public static function get_raw_test_data() {
